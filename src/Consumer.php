@@ -100,9 +100,9 @@ class Consumer
                 )
                 ->toArray();
             $properties = array_merge($properties, $props);
-          
+
         }
-            
+
         // Create new object of the correct type
         $typeProperty = Linq::from($properties)
             ->firstOrNull(
@@ -134,6 +134,18 @@ class Consumer
                 $object->description = trim($descriptionElement->attr("content"));
             }
         }
+
+        //
+        // $descriptionElement = $crawler->filter("link[property='description']")->first();
+        // if ($descriptionElement) {
+        //     $object->description = trim($descriptionElement->attr("content"));
+        // }
+        $linktags = $crawler->filter("link")->each(function ($tag) {
+                    return array('rel' => $tag->attr('rel'), 'href' => $tag->attr('href'), 'sizes' => $tag->attr('sizes'));
+                }
+            );
+
+        $object->linkfavicon = $linktags;
 
         return $object;
     }
